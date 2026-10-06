@@ -3,350 +3,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSSC - ศูนย์บริการผลิตภัณฑ์สุขภาพเบ็ดเสร็จ</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts (Kanit) -->
+    <title>OSSC-NKP One Stop Service Center</title>
+    <!-- ใช้ Tailwind CSS เพื่อความทันสมัยและสวยงาม -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
     <style>
-        body {
-            font-family: 'Kanit', sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
-        }
-        .navbar-brand {
-            font-weight: 600;
-            color: #0056b3 !important;
-        }
-        .bg-primary-custom {
-            background-color: #1a5cff;
-        }
-        /* Banner Section */
-        .banner {
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            color: white;
-            padding: 60px 0;
-            text-align: center;
-            border-bottom-left-radius: 30px;
-            border-bottom-right-radius: 30px;
-            margin-bottom: 30px;
-        }
-        /* Card Styles */
-        .category-card {
-            border: none;
-            border-radius: 15px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-            background: white;
-        }
-        .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        .icon-wrapper {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            font-size: 24px;
-        }
-        /* Login Buttons */
-        .btn-thaid {
-            background-color: #1a1a1a;
-            color: white;
-            border: 1px solid #333;
-        }
-        .btn-thaid:hover { background-color: #333; color: white; }
-        .btn-gmail {
-            background-color: white;
-            color: #757575;
-            border: 1px solid #ddd;
-        }
-        .btn-gmail:hover { background-color: #f1f1f1; }
-        
-        /* Hidden classes for toggling views */
-        .d-none-custom { display: none !important; }
-        
-        .table-custom th {
-            background-color: #e9ecef;
-        }
+        body { font-family: 'Kanit', sans-serif; background-color: #f3f4f6; }
+        .bg-banner { background: linear-gradient(135deg, #1e3a8a 0%, #064e3b 100%); }
+        .hidden-section { display: none !important; }
     </style>
 </head>
-<body>
+<body class="text-gray-800">
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="#" onclick="showHome()"><i class="fa-solid fa-notes-medical"></i> OSSC-NKP</a>
-            <div class="d-flex align-items-center">
-                <div id="userProfile" class="d-none-custom me-3">
-                    <span class="badge bg-success" id="roleBadge">ประชาชน</span>
-                    <span class="ms-2 fw-bold" id="userName">ผู้ใช้งาน</span>
-                </div>
-                <button class="btn btn-outline-danger btn-sm d-none-custom" id="btnLogout" onclick="logout()">ออกจากระบบ</button>
+    <!-- Header / Banner -->
+    <header class="bg-banner text-white p-6 shadow-lg rounded-b-3xl">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="cursor-pointer" onclick="showDashboard()">
+                <h1 class="text-3xl font-bold"><i class="fas fa-shield-alt mr-2"></i> OSSC-NKP</h1>
+                <p class="text-sm mt-1 opacity-80">ศูนย์บริการเบ็ดเสร็จ กองอาหารและยา</p>
             </div>
-        </div>
-    </nav>
-
-    <!-- Login Page -->
-    <div id="loginSection" class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-5">
-                <div class="card shadow-sm border-0" style="border-radius: 20px;">
-                    <div class="card-body p-5 text-center">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Emblem_of_the_Ministry_of_Public_Health_of_Thailand.svg/200px-Emblem_of_the_Ministry_of_Public_Health_of_Thailand.svg.png" width="80" class="mb-4">
-                        <h4 class="mb-4 fw-bold">เข้าสู่ระบบ OSSC</h4>
-                        
-                        <!-- Login Buttons -->
-                        <button class="btn btn-thaid w-100 mb-3 py-2 fw-bold" onclick="login('user')">
-                            เข้าสู่ระบบด้วย <span class="ms-1">ThaiD</span>
-                        </button>
-                        <button class="btn btn-gmail w-100 mb-4 py-2 fw-bold" onclick="login('user')">
-                            <i class="fa-brands fa-google text-danger me-2"></i> เข้าสู่ระบบด้วย Gmail
-                        </button>
-
-                        <hr>
-                        <p class="text-muted small mt-3">สำหรับเจ้าหน้าที่</p>
-                        <button class="btn btn-outline-primary w-100 py-2" onclick="login('admin')">
-                            <i class="fa-solid fa-user-shield me-2"></i> เข้าสู่ระบบ (Admin)
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main System (Hidden by default) -->
-    <div id="mainSystem" class="d-none-custom">
-        
-        <!-- Banner -->
-        <div class="banner">
-            <div class="container">
-                <h1 class="fw-bold">ศูนย์รวมข้อมูลและการขออนุญาตผลิตภัณฑ์สุขภาพ</h1>
-                <p class="lead">One Stop Service Center (OSSC)</p>
-            </div>
-        </div>
-
-        <div class="container mb-5">
             
-            <!-- Dashboard Categories (Based on Drive Folders) -->
-            <div id="dashboardView">
-                <h4 class="fw-bold mb-4">หมวดหมู่ พ.ร.บ. (ข้อมูลจาก Drive)</h4>
-                <div class="row g-4">
-                    <!-- อาหาร -->
-                    <div class="col-md-3 col-sm-6">
-                        <div class="card category-card text-center p-4" onclick="openCategory('ขออนุญาตอาหาร')">
-                            <div class="icon-wrapper bg-success text-white"><i class="fa-solid fa-utensils"></i></div>
-                            <h6 class="fw-bold">อาหาร</h6>
-                        </div>
-                    </div>
-                    <!-- ยา -->
-                    <div class="col-md-3 col-sm-6">
-                        <div class="card category-card text-center p-4" onclick="openCategory('ขออนุญาตยา')">
-                            <div class="icon-wrapper bg-primary text-white"><i class="fa-solid fa-capsules"></i></div>
-                            <h6 class="fw-bold">ยา</h6>
-                        </div>
-                    </div>
-                    <!-- เครื่องสำอาง -->
-                    <div class="col-md-3 col-sm-6">
-                        <div class="card category-card text-center p-4" onclick="openCategory('เครื่องสำอาง')">
-                            <div class="icon-wrapper bg-info text-white"><i class="fa-solid fa-spray-can-sparkles"></i></div>
-                            <h6 class="fw-bold">เครื่องสำอาง</h6>
-                        </div>
-                    </div>
-                    <!-- เครื่องมือแพทย์ -->
-                    <div class="col-md-3 col-sm-6">
-                        <div class="card category-card text-center p-4" onclick="openCategory('เครื่องมือแพทย์')">
-                            <div class="icon-wrapper bg-danger text-white"><i class="fa-solid fa-stethoscope"></i></div>
-                            <h6 class="fw-bold">เครื่องมือแพทย์</h6>
-                        </div>
-                    </div>
-                    <!-- วัตถุอันตราย -->
-                    <div class="col-md-3 col-sm-6">
-                        <div class="card category-card text-center p-4" onclick="openCategory('วัตถุอันตราย')">
-                            <div class="icon-wrapper bg-warning text-dark"><i class="fa-solid fa-skull-crossbones"></i></div>
-                            <h6 class="fw-bold">วัตถุอันตราย</h6>
-                        </div>
-                    </div>
-                    <!-- ผลิตภัณฑ์สมุนไพร -->
-                    <div class="col-md-3 col-sm-6">
-                        <div class="card category-card text-center p-4" onclick="openCategory('ผลิตภัณฑ์สมุนไพร')">
-                            <div class="icon-wrapper bg-success text-white"><i class="fa-solid fa-leaf"></i></div>
-                            <h6 class="fw-bold">ผลิตภัณฑ์สมุนไพร</h6>
-                        </div>
-                    </div>
-                    <!-- สถานพยาบาล -->
-                    <div class="col-md-3 col-sm-6">
-                        <div class="card category-card text-center p-4" onclick="openCategory('สถานพยาบาล')">
-                            <div class="icon-wrapper bg-primary text-white"><i class="fa-solid fa-hospital"></i></div>
-                            <h6 class="fw-bold">สถานพยาบาล</h6>
-                        </div>
-                    </div>
-                    <!-- สถานประกอบการเพื่อสุขภาพ -->
-                    <div class="col-md-3 col-sm-6">
-                        <div class="card category-card text-center p-4" onclick="openCategory('สถานประกอบการเพื่อสุขภาพ')">
-                            <div class="icon-wrapper bg-info text-white"><i class="fa-solid fa-spa"></i></div>
-                            <h6 class="fw-bold">สถานประกอบการเพื่อสุขภาพ</h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Detailed Category View -->
-            <div id="categoryDetailView" class="d-none-custom">
-                <button class="btn btn-outline-secondary mb-3" onclick="showHome()">
-                    <i class="fa-solid fa-arrow-left"></i> กลับหน้าหลัก
+            <!-- ปุ่ม Login สำหรับเจ้าหน้าที่ (แสดงตอนยังไม่ Login) -->
+            <div id="guest-controls">
+                <button onclick="showLoginSection()" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm transition flex items-center gap-2">
+                    <i class="fas fa-user-lock"></i> สำหรับเจ้าหน้าที่
                 </button>
+            </div>
+
+            <!-- ข้อมูลเจ้าหน้าที่ (แสดงตอน Login แล้ว) -->
+            <div id="admin-info" class="hidden-section flex items-center gap-4">
+                <span class="bg-green-500 text-white px-4 py-1 rounded-full text-sm">
+                    <i class="fas fa-user-shield mr-1"></i> เจ้าหน้าที่ (Admin)
+                </span>
+                <button onclick="logout()" class="hover:text-red-300 text-sm font-medium transition">
+                    <i class="fas fa-sign-out-alt"></i> ออกจากระบบ
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto mt-8 p-4">
+        
+        <!-- ส่วนที่ 1: หน้า Login (ซ่อนไว้เป็นค่าเริ่มต้น จะแสดงเมื่อกดปุ่ม "สำหรับเจ้าหน้าที่") -->
+        <section id="login-section" class="hidden-section max-w-md mx-auto bg-white p-8 rounded-2xl shadow-xl text-center mt-10 border border-gray-100">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-semibold text-gray-800">เข้าสู่ระบบเจ้าหน้าที่</h2>
+                <button onclick="showDashboard()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <div class="w-20 h-20 mx-auto bg-blue-50 rounded-full flex items-center justify-center mb-6">
+                <i class="fas fa-lock text-3xl text-blue-600"></i>
+            </div>
+            
+            <div class="space-y-4">
+                <button onclick="loginAsAdmin()" class="w-full py-3 px-4 border-2 border-blue-100 rounded-xl hover:bg-blue-50 flex items-center justify-center gap-3 transition text-blue-700 font-medium">
+                    <i class="fas fa-cloud"></i> เข้าสู่ระบบด้วย e-office / Gmail
+                </button>
+                <button onclick="loginAsAdmin()" class="w-full py-3 px-4 bg-gray-800 text-white rounded-xl hover:bg-gray-900 flex items-center justify-center gap-3 transition font-medium">
+                    <i class="fas fa-id-card"></i> เข้าสู่ระบบด้วย ThaiD
+                </button>
+            </div>
+        </section>
+
+        <!-- ส่วนที่ 2: เมนูหมวดหมู่ พรบ. (แสดงเป็นหน้าแรกสำหรับประชาชน) -->
+        <section id="dashboard-section" class="block">
+            <h2 class="text-2xl font-semibold mb-6 text-gray-800 border-l-4 border-green-600 pl-3">เลือกหมวดหมู่ที่ต้องการติดต่อ</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4 class="fw-bold" id="categoryTitle">ชื่อหมวดหมู่</h4>
-                    
-                    <!-- Admin Only: Upload Button -->
-                    <button class="btn btn-primary d-none-custom" id="btnUploadAdmin" data-bs-toggle="modal" data-bs-target="#uploadModal">
-                        <i class="fa-solid fa-cloud-arrow-up"></i> อัปโหลดเอกสาร (Admin)
-                    </button>
+                <div onclick="showDocuments('อาหาร')" class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md cursor-pointer text-center flex flex-col items-center justify-center transition border border-gray-100 hover:border-orange-300 group">
+                    <div class="w-16 h-16 bg-orange-50 group-hover:bg-orange-100 rounded-full flex items-center justify-center mb-3 transition">
+                        <i class="fas fa-utensils text-orange-500 text-2xl"></i>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700">ขออนุญาตอาหาร</span>
                 </div>
 
-                <!-- Content Table -->
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body p-0">
-                        <table class="table table-hover table-custom mb-0">
-                            <thead>
-                                <tr>
-                                    <th width="5%">ลำดับ</th>
-                                    <th width="65%">รายการเอกสาร / หัวข้อย่อย</th>
-                                    <th width="30%" class="text-center">ดูเอกสาร (PDF)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>คู่มือสำหรับประชาชน (ระยะเวลาแล้วเสร็จตามแต่ละจังหวัดกำหนด)</td>
-                                    <td class="text-center">
-                                        <button class="btn btn-sm btn-danger"><i class="fa-solid fa-file-pdf"></i> เปิด PDF</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>รายการเอกสารยื่นขออนุญาต (Checklist)</td>
-                                    <td class="text-center">
-                                        <button class="btn btn-sm btn-danger"><i class="fa-solid fa-file-pdf"></i> เปิด PDF</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>แบบฟอร์มขออนุญาต / ขอสิทธิ์ใช้ e-submission</td>
-                                    <td class="text-center">
-                                        <button class="btn btn-sm btn-danger"><i class="fa-solid fa-file-pdf"></i> เปิด PDF</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <div onclick="showDocuments('ยา')" class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md cursor-pointer text-center flex flex-col items-center justify-center transition border border-gray-100 hover:border-blue-300 group">
+                    <div class="w-16 h-16 bg-blue-50 group-hover:bg-blue-100 rounded-full flex items-center justify-center mb-3 transition">
+                        <i class="fas fa-pills text-blue-500 text-2xl"></i>
                     </div>
+                    <span class="text-sm font-medium text-gray-700">ขออนุญาตยา</span>
+                </div>
+
+                <div onclick="showDocuments('เครื่องสำอาง')" class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md cursor-pointer text-center flex flex-col items-center justify-center transition border border-gray-100 hover:border-pink-300 group">
+                    <div class="w-16 h-16 bg-pink-50 group-hover:bg-pink-100 rounded-full flex items-center justify-center mb-3 transition">
+                        <i class="fas fa-spray-can text-pink-500 text-2xl"></i>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700">ขออนุญาตเครื่องสำอาง</span>
+                </div>
+
+                <div onclick="showDocuments('สมุนไพร')" class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md cursor-pointer text-center flex flex-col items-center justify-center transition border border-gray-100 hover:border-green-300 group">
+                    <div class="w-16 h-16 bg-green-50 group-hover:bg-green-100 rounded-full flex items-center justify-center mb-3 transition">
+                        <i class="fas fa-leaf text-green-500 text-2xl"></i>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700">ผลิตภัณฑ์สมุนไพร</span>
+                </div>
+
+                <div onclick="showDocuments('เครื่องมือแพทย์')" class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md cursor-pointer text-center flex flex-col items-center justify-center transition border border-gray-100 hover:border-red-300 group">
+                    <div class="w-16 h-16 bg-red-50 group-hover:bg-red-100 rounded-full flex items-center justify-center mb-3 transition">
+                        <i class="fas fa-stethoscope text-red-500 text-2xl"></i>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700">เครื่องมือแพทย์</span>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ส่วนที่ 3: รายการเอกสารและระบบอัปโหลด -->
+        <section id="documents-section" class="hidden-section mt-4">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                <div>
+                    <button onclick="showDashboard()" class="text-gray-500 hover:text-blue-600 mb-2 font-medium transition"><i class="fas fa-arrow-left mr-1"></i> กลับไปหน้าหมวดหมู่</button>
+                    <h2 id="doc-title" class="text-2xl font-semibold text-gray-800 border-l-4 border-blue-600 pl-3">รายการเอกสาร: </h2>
+                </div>
+                
+                <!-- ปุ่มอัปโหลดจะแสดงเฉพาะเมื่อเข้าสู่ระบบด้วยสิทธิ์ Admin -->
+                <div id="admin-controls" class="hidden-section">
+                    <label class="bg-green-600 text-white px-5 py-2.5 rounded-lg hover:bg-green-700 cursor-pointer shadow-md transition flex items-center gap-2 font-medium">
+                        <i class="fas fa-upload"></i> อัปโหลดไฟล์ใหม่
+                        <!-- รับไฟล์ PDF เท่านั้น -->
+                        <input type="file" accept=".pdf" class="hidden" onchange="alert('จำลองการอัปโหลดไฟล์ไปที่ Google Drive')">
+                    </label>
                 </div>
             </div>
 
-        </div>
-    </div>
-
-    <!-- Upload Modal (For Admin) -->
-    <div class="modal fade" id="uploadModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title fw-bold">อัปโหลดไฟล์เข้า Google Drive</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">เลือกโฟลเดอร์ปลายทาง</label>
-                        <select class="form-select">
-                            <option>อาหาร</option>
-                            <option>ยา</option>
-                            <option>เครื่องสำอาง</option>
-                            <option>เครื่องมือแพทย์</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">ชื่อหัวข้อเอกสาร</label>
-                        <input type="text" class="form-control" placeholder="ระบุชื่อหัวข้อ...">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">เลือกไฟล์ (PDF)</label>
-                        <input type="file" class="form-control" accept=".pdf">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="alert('จำลองการอัปโหลดไฟล์สำเร็จ!')">อัปโหลดไฟล์</button>
-                </div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 text-gray-700 border-b border-gray-200">
+                            <th class="p-4 font-semibold w-16 text-center">ลำดับ</th>
+                            <th class="p-4 font-semibold">ชื่อเอกสาร / กระบวนการ</th>
+                            <th class="p-4 font-semibold text-center w-32">ดาวน์โหลด</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="p-4 text-center text-gray-500">1</td>
+                            <td class="p-4 text-gray-700">คู่มือสำหรับประชาชน (ระยะเวลาแล้วเสร็จตามแต่ละจังหวัดกำหนด)</td>
+                            <td class="p-4 text-center">
+                                <a href="#" class="text-red-500 hover:text-red-700 text-2xl transition" title="ดาวน์โหลด PDF"><i class="fas fa-file-pdf"></i></a>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="p-4 text-center text-gray-500">2</td>
+                            <td class="p-4 text-gray-700">รายการเอกสารยื่นขออนุญาต (Checklist)</td>
+                            <td class="p-4 text-center">
+                                <a href="#" class="text-red-500 hover:text-red-700 text-2xl transition" title="ดาวน์โหลด PDF"><i class="fas fa-file-pdf"></i></a>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="p-4 text-center text-gray-500">3</td>
+                            <td class="p-4 text-gray-700">แบบฟอร์มขออนุญาต / ขอสิทธิ์ใช้ e-submission</td>
+                            <td class="p-4 text-center">
+                                <a href="#" class="text-red-500 hover:text-red-700 text-2xl transition" title="ดาวน์โหลด PDF"><i class="fas fa-file-pdf"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Script for Logic -->
+    </main>
+
+    <!-- JavaScript ควบคุมการทำงาน -->
     <script>
-        let currentRole = '';
+        let isAdmin = false; // สถานะเริ่มต้น ประชาชนทั่วไป (ไม่ได้ล็อกอิน)
 
-        function login(role) {
-            currentRole = role;
-            
-            // Hide Login, Show Main System
-            document.getElementById('loginSection').classList.add('d-none-custom');
-            document.getElementById('mainSystem').classList.remove('d-none-custom');
-            
-            // Show User Profile in Navbar
-            document.getElementById('userProfile').classList.remove('d-none-custom');
-            document.getElementById('btnLogout').classList.remove('d-none-custom');
-
-            // Set UI based on role
-            if(role === 'admin') {
-                document.getElementById('roleBadge').textContent = 'Admin';
-                document.getElementById('roleBadge').classList.replace('bg-success', 'bg-danger');
-                document.getElementById('userName').textContent = 'Admin2569';
-                document.getElementById('btnUploadAdmin').classList.remove('d-none-custom');
-            } else {
-                document.getElementById('roleBadge').textContent = 'ประชาชน';
-                document.getElementById('roleBadge').classList.replace('bg-danger', 'bg-success');
-                document.getElementById('userName').textContent = 'ประชาชนทั่วไป';
-                document.getElementById('btnUploadAdmin').classList.add('d-none-custom');
-            }
+        // ซ่อนทุกหน้า
+        function hideAllSections() {
+            document.getElementById('login-section').classList.add('hidden-section');
+            document.getElementById('dashboard-section').classList.add('hidden-section');
+            document.getElementById('documents-section').classList.add('hidden-section');
         }
 
+        // แสดงหน้าหมวดหมู่หลัก (ประชาชนเห็นหน้านี้เป็นหน้าแรก)
+        function showDashboard() {
+            hideAllSections();
+            document.getElementById('dashboard-section').classList.remove('hidden-section');
+        }
+
+        // แสดงหน้าล็อกอิน (สำหรับเจ้าหน้าที่)
+        function showLoginSection() {
+            hideAllSections();
+            document.getElementById('login-section').classList.remove('hidden-section');
+        }
+
+        // ฟังก์ชันจำลองการล็อกอินสำเร็จของเจ้าหน้าที่
+        function loginAsAdmin() {
+            isAdmin = true;
+            
+            // สลับปุ่มบน Header
+            document.getElementById('guest-controls').classList.add('hidden-section');
+            document.getElementById('admin-info').classList.remove('hidden-section');
+            
+            // กลับไปหน้าแรกหลังจากล็อกอิน
+            showDashboard();
+        }
+
+        // ฟังก์ชันออกจากระบบ
         function logout() {
-            currentRole = '';
-            document.getElementById('loginSection').classList.remove('d-none-custom');
-            document.getElementById('mainSystem').classList.add('d-none-custom');
-            document.getElementById('userProfile').classList.add('d-none-custom');
-            document.getElementById('btnLogout').classList.add('d-none-custom');
-            showHome(); // Reset view
-        }
-
-        function openCategory(categoryName) {
-            document.getElementById('dashboardView').classList.add('d-none-custom');
-            document.getElementById('categoryDetailView').classList.remove('d-none-custom');
-            document.getElementById('categoryTitle').textContent = categoryName;
+            isAdmin = false;
             
-            // Ensure Upload button visibility based on role
-            if(currentRole === 'admin') {
-                document.getElementById('btnUploadAdmin').classList.remove('d-none-custom');
-            } else {
-                document.getElementById('btnUploadAdmin').classList.add('d-none-custom');
-            }
+            // สลับปุ่มบน Header กลับเป็นโหมดบุคคลทั่วไป
+            document.getElementById('admin-info').classList.add('hidden-section');
+            document.getElementById('guest-controls').classList.remove('hidden-section');
+            
+            // ซ่อนปุ่มอัปโหลดหากเปิดหน้าเอกสารค้างไว้
+            document.getElementById('admin-controls').classList.add('hidden-section');
+
+            showDashboard();
         }
 
-        function showHome() {
-            document.getElementById('dashboardView').classList.remove('d-none-custom');
-            document.getElementById('categoryDetailView').classList.add('d-none-custom');
+        // แสดงหน้ารายการเอกสารเมื่อกดเลือกหมวดหมู่
+        function showDocuments(categoryName) {
+            hideAllSections();
+            document.getElementById('documents-section').classList.remove('hidden-section');
+            document.getElementById('doc-title').innerText = 'รายการเอกสาร: ' + categoryName;
+
+            // ตรวจสอบสถานะ หากเป็นแอดมินให้แสดงปุ่มอัปโหลด
+            if (isAdmin) {
+                document.getElementById('admin-controls').classList.remove('hidden-section');
+            } else {
+                document.getElementById('admin-controls').classList.add('hidden-section');
+            }
         }
     </script>
 </body>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSSC - ศูนย์บริการผลิตภัณฑ์สุขภาพเบ็ดเสร็จ</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Kanit) -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+        .navbar-brand {
+            font-weight: 600;
+            color: #0056b3 !important;
+        }
+        .bg-primary-custom {
+            background-color: #1a5cff;
+        }
+        /* Banner Section */
+        .banner {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            margin-bottom: 30px;
+        }
+        /* Card Styles */
+        .category-card {
+            border: none;
+            border-radius: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            background: white;
+        }
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .icon-wrapper {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 24px;
+        }
+        /* Login Buttons */
+        .btn-thaid {
+            background-color: #1a1a1a;
+            color: white;
+            border: 1px solid #333;
+        }
+        .btn-thaid:hover { background-color: #333; color: white; }
+        .btn-gmail {
+            background-color: white;
+            color: #757575;
+            border: 1px solid #ddd;
+        }
+        .btn-gmail:hover { background-color: #f1f1f1; }
+        
+        /* Hidden classes for toggling views */
+        .d-none-custom { display: none !important; }
+        
+        .table-custom th {
+            background-color: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#" onclick="showHome()"><i class="fa-solid fa-notes-medical"></i> OSSC-NKP</a>
+            <div class="d-flex align-items-center">
+                <div id="userProfile" class="d-none-custom me-3">
+                    <span class="badge bg-success" id="roleBadge">ประชาชน</span>
+                    <span class="ms-2 fw-bold" id="userName">ผู้ใช้งาน</span>
+                </div>
+                <button class="btn btn-outline-danger btn-sm d-none-custom" id="btnLogout" onclick="logout()">ออกจากระบบ</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Page -->
+    <div id="loginSection" class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card shadow-sm border-0" style="border-radius: 20px;">
+                    <div class="card-body p-5 text-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Emblem_of_the_Ministry_of_Public_Health_of_Thailand.svg/200px-Emblem_of_the_Ministry_of_Public_Health_of_Thailand.svg.png" width="80" class="mb-4">
+                        <h4 class="mb-4 fw-bold">เข้าสู่ระบบ OSSC</h4>
+                        
+                        <!-- Login Buttons -->
+                        <button class="btn btn-thaid w-100 mb-3 py-2 fw-bold" onclick="login('user')">
+                            เข้าสู่ระบบด้วย <span class="ms-1">ThaiD</span>
+                        </button>
+                        <button class="btn btn-gmail w-100 mb-4 py-2 fw-bold" onclick="login('user')">
+                            <i class="fa-brands fa-google text-danger me-2"></i> เข้าสู่ระบบด้วย Gmail
+                        </button>
+
+                        <hr>
+                        <p class="text-muted small mt-3">สำหรับเจ้าหน้าที่</p>
+                        <button class="btn btn-outline-primary w-100 py-2" onclick="login('admin')">
+                            <i class="fa-solid fa-user-shield me-2"></i> เข้าสู่ระบบ (Admin)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main System (Hidden by default) -->
+    <div id="mainSystem" class="d-none-custom">
+        
+        <!-- Banner -->
+        <div class="banner">
+            <div class="container">
+                <h1 class="fw-bold">ศูนย์รวมข้อมูลและการขออนุญาตผลิตภัณฑ์สุขภาพ</h1>
+                <p class="lead">One Stop Service Center (OSSC)</p>
+            </div>
+        </div>
+
+        <div class="container mb-5">
+            
+            <!-- Dashboard Categories (Based on Drive Folders) -->
+            <div id="dashboardView">
+                <h4 class="fw-bold mb-4">หมวดหมู่ พ.ร.บ. (ข้อมูลจาก Drive)</h4>
+                <div class="row g-4">
+                    <!-- อาหาร -->
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card category-card text-center p-4" onclick="openCategory('ขออนุญาตอาหาร')">
+                            <div class="icon-wrapper bg-success text-white"><i class="fa-solid fa-utensils"></i></div>
+                            <h6 class="fw-bold">อาหาร</h6>
+                        </div>
+                    </div>
+                    <!-- ยา -->
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card category-card text-center p-4" onclick="openCategory('ขออนุญาตยา')">
+                            <div class="icon-wrapper bg-primary text-white"><i class="fa-solid fa-capsules"></i></div>
+                            <h6 class="fw-bold">ยา</h6>
+                        </div>
+                    </div>
+                    <!-- เครื่องสำอาง -->
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card category-card text-center p-4" onclick="openCategory('เครื่องสำอาง')">
+                            <div class="icon-wrapper bg-info text-white"><i class="fa-solid fa-spray-can-sparkles"></i></div>
+                            <h6 class="fw-bold">เครื่องสำอาง</h6>
+                        </div>
+                    </div>
+                    <!-- เครื่องมือแพทย์ -->
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card category-card text-center p-4" onclick="openCategory('เครื่องมือแพทย์')">
+                            <div class="icon-wrapper bg-danger text-white"><i class="fa-solid fa-stethoscope"></i></div>
+                            <h6 class="fw-bold">เครื่องมือแพทย์</h6>
+                        </div>
+                    </div>
+                    <!-- วัตถุอันตราย -->
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card category-card text-center p-4" onclick="openCategory('วัตถุอันตราย')">
+                            <div class="icon-wrapper bg-warning text-dark"><i class="fa-solid fa-skull-crossbones"></i></div>
+                            <h6 class="fw-bold">วัตถุอันตราย</h6>
+                        </div>
+                    </div>
+                    <!-- ผลิตภัณฑ์สมุนไพร -->
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card category-card text-center p-4" onclick="openCategory('ผลิตภัณฑ์สมุนไพร')">
+                            <div class="icon-wrapper bg-success text-white"><i class="fa-solid fa-leaf"></i></div>
+                            <h6 class="fw-bold">ผลิตภัณฑ์สมุนไพร</h6>
+                        </div>
+                    </div>
+                    <!-- สถานพยาบาล -->
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card category-card text-center p-4" onclick="openCategory('สถานพยาบาล')">
+                            <div class="icon-wrapper bg-primary text-white"><i class="fa-solid fa-hospital"></i></div>
+                            <h6 class="fw-bold">สถานพยาบาล</h6>
+                        </div>
+                    </div>
+                    <!-- สถานประกอบการเพื่อสุขภาพ -->
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card category-card text-center p-4" onclick="openCategory('สถานประกอบการเพื่อสุขภาพ')">
+                            <div class="icon-wrapper bg-info text-white"><i class="fa-solid fa-spa"></i></div>
+                            <h6 class="fw-bold">สถานประกอบการเพื่อสุขภาพ</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Category View -->
+            <div id="categoryDetailView" class="d-none-custom">
+                <button class="btn btn-outline-secondary mb-3" onclick="showHome()">
+                    <i class="fa-solid fa-arrow-left"></i> กลับหน้าหลัก
+                </button>
+                
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="fw-bold" id="categoryTitle">ชื่อหมวดหมู่</h4>
+                    
+                    <!-- Admin Only: Upload Button -->
+                    <button class="btn btn-primary d-none-custom" id="btnUploadAdmin" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> อัปโหลดเอกสาร (Admin)
+                    </button>
+                </div>
+
+                <!-- Content Table -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-0">
+                        <table class="table table-hover table-custom mb-0">
+                            <thead>
+                                <tr>
+                                    <th width="5%">ลำดับ</th>
+                                    <th width="65%">รายการเอกสาร / หัวข้อย่อย</th>
+                                    <th width="30%" class="text-center">ดูเอกสาร (PDF)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>คู่มือสำหรับประชาชน (ระยะเวลาแล้วเสร็จตามแต่ละจังหวัดกำหนด)</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-danger"><i class="fa-solid fa-file-pdf"></i> เปิด PDF</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>รายการเอกสารยื่นขออนุญาต (Checklist)</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-danger"><i class="fa-solid fa-file-pdf"></i> เปิด PDF</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>แบบฟอร์มขออนุญาต / ขอสิทธิ์ใช้ e-submission</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-danger"><i class="fa-solid fa-file-pdf"></i> เปิด PDF</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Upload Modal (For Admin) -->
+    <div class="modal fade" id="uploadModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">อัปโหลดไฟล์เข้า Google Drive</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">เลือกโฟลเดอร์ปลายทาง</label>
+                        <select class="form-select">
+                            <option>อาหาร</option>
+                            <option>ยา</option>
+                            <option>เครื่องสำอาง</option>
+                            <option>เครื่องมือแพทย์</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">ชื่อหัวข้อเอกสาร</label>
+                        <input type="text" class="form-control" placeholder="ระบุชื่อหัวข้อ...">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">เลือกไฟล์ (PDF)</label>
+                        <input type="file" class="form-control" accept=".pdf">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="alert('จำลองการอัปโหลดไฟล์สำเร็จ!')">อัปโหลดไฟล์</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Script for Logic -->
+    <script>
+        let currentRole = '';
+
+        function login(role) {
+            currentRole = role;
+            
+            // Hide Login, Show Main System
+            document.getElementById('loginSection').classList.add('d-none-custom');
+            document.getElementById('mainSystem').classList.remove('d-none-custom');
+            
+            // Show User Profile in Navbar
+            document.getElementById('userProfile').classList.remove('d-none-custom');
+            document.getElementById('btnLogout').classList.remove('d-none-custom');
+
+            // Set UI based on role
+            if(role === 'admin') {
+                document.getElementById('roleBadge').textContent = 'Admin';
+                document.getElementById('roleBadge').classList.replace('bg-success', 'bg-danger');
+                document.getElementById('userName').textContent = 'Admin2569';
+                document.getElementById('btnUploadAdmin').classList.remove('d-none-custom');
+            } else {
+                document.getElementById('roleBadge').textContent = 'ประชาชน';
+                document.getElementById('roleBadge').classList.replace('bg-danger', 'bg-success');
+                document.getElementById('userName').textContent = 'ประชาชนทั่วไป';
+                document.getElementById('btnUploadAdmin').classList.add('d-none-custom');
+            }
+        }
+
+        function logout() {
+            currentRole = '';
+            document.getElementById('loginSection').classList.remove('d-none-custom');
+            document.getElementById('mainSystem').classList.add('d-none-custom');
+            document.getElementById('userProfile').classList.add('d-none-custom');
+            document.getElementById('btnLogout').classList.add('d-none-custom');
+            showHome(); // Reset view
+        }
+
+        function openCategory(categoryName) {
+            document.getElementById('dashboardView').classList.add('d-none-custom');
+            document.getElementById('categoryDetailView').classList.remove('d-none-custom');
+            document.getElementById('categoryTitle').textContent = categoryName;
+            
+            // Ensure Upload button visibility based on role
+            if(currentRole === 'admin') {
+                document.getElementById('btnUploadAdmin').classList.remove('d-none-custom');
+            } else {
+                document.getElementById('btnUploadAdmin').classList.add('d-none-custom');
+            }
+        }
+
+        function showHome() {
+            document.getElementById('dashboardView').classList.remove('d-none-custom');
+            document.getElementById('categoryDetailView').classList.add('d-none-custom');
+        }
+    </script>
+</body>
+</html>
